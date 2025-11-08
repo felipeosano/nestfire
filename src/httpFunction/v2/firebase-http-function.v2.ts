@@ -3,7 +3,7 @@ import { Express } from 'express-serve-static-core';
 import compression from 'compression';
 import { HttpsFunction, onRequest } from 'firebase-functions/v2/https';
 import { createFunction } from '../create-function';
-import { deleteImportedControllers } from '../delete-imported-controllers';
+// import { deleteImportedControllers } from '../delete-imported-controllers';
 import { IFirebaseHttpsConfigurationV2 } from '../../interfaces/firebase-https-configuration-v2.interface';
 import { removePathFromSingleController } from '../url-prefix';
 
@@ -15,9 +15,9 @@ import { removePathFromSingleController } from '../url-prefix';
  * @returns {HttpsFunction} - The created Firebase HTTPS function.
  */
 export function createFirebaseHttpsV2(module: any, httpsOptions?: IFirebaseHttpsConfigurationV2, isolateControllers: boolean = true): HttpsFunction {
-  if (isolateControllers) {
-    deleteImportedControllers(module);
-  }
+  // if (isolateControllers) {  //TODO: Error, This delete controller in the main module as well, causing missing routes. --- IGNORE ---
+  //   deleteImportedControllers(module);
+  // }
 
   if (httpsOptions?.removeControllerPrefix) {
     removePathFromSingleController(module);

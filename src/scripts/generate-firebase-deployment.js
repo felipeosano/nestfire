@@ -20,7 +20,7 @@ const content = `/**
 import { AppModule } from 'src/app.module';
 import { firebaseFunctionsHttpsDeployment } from 'nestfire';
 
-export = firebaseFunctionsHttpsDeployment(AppModule);
+const exportedFunctions: Record<string, any> = firebaseFunctionsHttpsDeployment(AppModule); export = exportedFunctions;
 
 /**
 * 👇 If you want to deploy Firestore triggers, export them below:
@@ -28,7 +28,6 @@ export = firebaseFunctionsHttpsDeployment(AppModule);
 * More examples: https://github.com/felipeosano/nestfire.git#firestore-trigger
 */
 `;
-
 
 fs.writeFileSync(outPath, content, 'utf8');
 console.log(`✔️  Generated ${path.relative(projectRoot, outPath)}`);
