@@ -1,6 +1,6 @@
 {
   "name": "nestfire",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Firebase for NestJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
