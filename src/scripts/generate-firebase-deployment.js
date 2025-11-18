@@ -20,7 +20,8 @@ const content = `/**
 import { AppModule } from 'src/app.module';
 import { firebaseFunctionsHttpsDeployment } from 'nestfire';
 
-const exportedFunctions: Record<string, any> = firebaseFunctionsHttpsDeployment(AppModule); export = exportedFunctions;
+const exportedFunctions: Record<string, any> = firebaseFunctionsHttpsDeployment(AppModule);
+export default exportedFunctions;
 
 /**
 * 👇 If you want to deploy Firestore triggers, export them below:
