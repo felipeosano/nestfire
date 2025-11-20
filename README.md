@@ -27,18 +27,22 @@ Example and step by step guide: [nestfire-example](https://github.com/felipeosan
 
 ```bash
 npm install nestfire
+npx nestfire init
 ```
+
 > **Steps:**
+>
 > 1. Run `firebase init` to set up Firebase in your project.
 > 2. Delete the `functions` folder created by firebase init.
-> 3. Add in package.json  `"main": "dist/index.js"`.
+> 3. Add in package.json `"main": "dist/index.js"`.
 > 4. Configure the `firebase.json` file to use the `index.ts` file created by nestfire. [See below](#indexts).
-
 
 ## ⚙️ Environment Variables
 
 Add the private key in your `.env` file as`SERVICE_ACCOUNT_KEY` or `SERVICE_ACCOUNT_KEY_PATH`
+
 > **To generate a private key file for your service account:**
+>
 > 1. In the Firebase console, open Settings > [Service Accounts](https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk?fb_utm_source=chatgpt.com&_gl=1*bcauiw*_ga*NDkyNDQxNTI4LjE3NDI1MDc1ODA.*_ga_CW55HF8NVT*czE3NDc2ODU0MDUkbzUwJGcxJHQxNzQ3Njg1OTAyJGo1MSRsMCRoMCRkZS1xTjE2TUlaRU9UMG9QaFQteFFJeFhPV1o5SEhCSkcxZw..)
 > 2. Click Generate New Private Key, then confirm by clicking Generate Key.
 > 3. Securely store the JSON file containing the key.
@@ -46,6 +50,7 @@ Add the private key in your `.env` file as`SERVICE_ACCOUNT_KEY` or `SERVICE_ACCO
 <br>
 
 `.env` file, add the path to the service account key file:
+
 ```bash
 SERVICE_ACCOUNT_KEY_PATH=./serviceAccountKey.json
 ```
@@ -57,7 +62,9 @@ SERVICE_ACCOUNT_KEY_PATH=./serviceAccountKey.json
 Import `FirebaseModule` into **any** module where you need Firebase.
 
 ## Modules
+
 Import FirebaseModule and ConfigModule. Use FirebaseModule from nestfire.
+
 ```ts
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -65,10 +72,7 @@ import { FirebaseModule } from 'nestfire';
 import { BooksService } from './books.service';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    FirebaseModule,
-  ],
+  imports: [ConfigModule.forRoot(), FirebaseModule],
   providers: [BooksService],
   exports: [BooksService],
   controllers: [BooksController],
@@ -77,6 +81,7 @@ export class BooksModule {}
 ```
 
 ## Firestore
+
 Injecting Firebase. Use Firebase from nestfire.
 
 ```ts
@@ -98,7 +103,6 @@ export class BookService {
     await this.firebase.firestore('specific-database').collection('books').add(book);
   }
 }
-
 ```
 
 ## Auth
@@ -123,8 +127,10 @@ await bucket.upload('local-file.txt', { destination: 'uploads/file.txt' });
 
 <br>
 
-# 🚀 Deploy NestJS on Firebase Functions 
+# 🚀 Deploy NestJS on Firebase Functions
+
 ## index.ts
+
 When you install `nestfire`, it will create an `index.ts` file in the root of your project. This file is used to deploy your functions.  
 The `firebase.json` file has to be configured to use this file.
 
@@ -137,16 +143,18 @@ In your `firebase.json` file, add the following:
 {
   "functions": {
     "source": ".",
-    "runtime": "nodejs22",
+    "runtime": "nodejs22"
   }
 }
 ```
 
 ## HTTPS
+
 Add the `@FirebaseHttps` decorator in the modules you want to deploy.
 The first argument is the version of the function you want to deploy. The second argument is an object with the options for the function.
 
 ### V1
+
 Version: EnumFirebaseFunctionVersion.V1
 Options: [RuntimeOptions](https://firebase.google.com/docs/reference/functions/firebase-functions.runtimeoptions)
 
@@ -155,6 +163,7 @@ Options: [RuntimeOptions](https://firebase.google.com/docs/reference/functions/f
 ```
 
 ### V2
+
 Version: EnumFirebaseFunctionVersion.V2
 Options: [HttpsOptions](https://firebase.google.com/docs/reference/functions/2nd-gen/node/firebase-functions.https.httpsoptions)
 
@@ -163,6 +172,7 @@ Options: [HttpsOptions](https://firebase.google.com/docs/reference/functions/2nd
 ```
 
 ### Example
+
 ```ts
 import { Module } from '@nestjs/common';
 import { BookController } from './book.controller';
@@ -178,7 +188,7 @@ import { EnumFirebaseFunctionVersion, FirebaseHttps } from 'nestfire';
 export class BookModule {}
 ```
 
-> **Note:** You can deploy with the command:  `firebase deploy --only functions`
+> **Note:** You can deploy with the command: `firebase deploy --only functions`
 > Before deploying you have to build your project. `npm run build`.
 
 <br>
@@ -200,28 +210,22 @@ export const orderTrigger: Trigger = {
   onCreate: eventTrigger(
     'onCreate',
     'projects/{projectId}/orders/{orderId}',
-    async function orderCreatedTriggerOnCreate(
-      snapshot: DocumentSnapshot,
-      context: EventContext
-    ): Promise<void> {
+    async function orderCreatedTriggerOnCreate(snapshot: DocumentSnapshot, context: EventContext): Promise<void> {
       // Example: send confirmation email
     },
-    { memory: '256MB', minInstances: 1 },
+    { memory: '256MB', minInstances: 1 }
   ),
 
   // Trigger when an existing order document is updated
   onUpdate: eventTrigger(
     'onUpdate',
     'projects/{projectId}/orders/{orderId}',
-    async function orderUpdatedTriggerOnUpdate(
-      change: Change<DocumentSnapshot>,
-      context: EventContext
-    ): Promise<void> {
+    async function orderUpdatedTriggerOnUpdate(change: Change<DocumentSnapshot>, context: EventContext): Promise<void> {
       const before = change.before.data();
       const after = change.after.data();
       // Example: notify if status changed
     },
-    { memory: '256MB', minInstances: 1 },
+    { memory: '256MB', minInstances: 1 }
   ),
 };
 ```
@@ -236,10 +240,7 @@ import { getModule } from 'nestfire';
 import { InventoryTriggerModule } from './inventory-trigger.module';
 import { InventoryService } from 'src/modules/inventory/inventory.service';
 
-export async function inventoryRestockTriggerOnCreate(
-  snapshot: DocumentSnapshot,
-  context: EventContext
-): Promise<void> {
+export async function inventoryRestockTriggerOnCreate(snapshot: DocumentSnapshot, context: EventContext): Promise<void> {
   const mod = await getModule(InventoryTriggerModule);
   const inventoryService = mod.get(InventoryService);
 
@@ -257,6 +258,7 @@ export { orderTrigger } from './src/triggers/order/order.trigger';
 ```
 
 > This will create a Firebase Function named `orderTrigger`. It will be deployed when you run:
+>
 > ```bash
 > firebase deploy --only functions
 > ```
@@ -267,6 +269,7 @@ It is recommended to place your Firestore triggers inside a `src/triggers` direc
 Each trigger should have its own subfolder with a `.trigger.ts` and `.trigger.module.ts` file.
 
 #### Example Structure:
+
 ```
 src/
 └── triggers/
@@ -289,28 +292,22 @@ export const orderTrigger: Trigger = {
   onCreate: eventTrigger(
     'onCreate',
     'projects/{projectId}/orders/{orderId}',
-    async function orderCreatedTriggerOnCreate(
-      snapshot: DocumentSnapshot,
-      context: EventContext
-    ): Promise<void> {
+    async function orderCreatedTriggerOnCreate(snapshot: DocumentSnapshot, context: EventContext): Promise<void> {
       // Example: send confirmation email
     },
-    { memory: '256MB', minInstances: 1 },
+    { memory: '256MB', minInstances: 1 }
   ),
 
   // Trigger when an existing order document is updated
   onUpdate: eventTrigger(
     'onUpdate',
     'projects/{projectId}/orders/{orderId}',
-    async function orderUpdatedTriggerOnUpdate(
-      change: Change<DocumentSnapshot>,
-      context: EventContext
-    ): Promise<void> {
+    async function orderUpdatedTriggerOnUpdate(change: Change<DocumentSnapshot>, context: EventContext): Promise<void> {
       const before = change.before.data();
       const after = change.after.data();
       // Example: notify if status changed
     },
-    { memory: '256MB', minInstances: 1 },
+    { memory: '256MB', minInstances: 1 }
   ),
 };
 ```
@@ -324,15 +321,17 @@ Finally, export your trigger in `index.ts` to enable deployment.
 - **index.ts**  
   Auto-generated entry point used by Firebase to detect and deploy NestJS modules decorated with `@FirebaseHttps`. This file is created when you install `nestfire` and must not be deleted. It calls `firebaseFunctionsHttpsDeployment(AppModule)` to expose decorated modules.
 
- - **@FirebaseHttps**  
-   Decorator to mark NestJS modules for deployment as Firebase Functions.  
-   Usage:  
-   ```ts
-   @FirebaseHttps(EnumFirebaseFunctionVersion.V1, { memory: '256MB' })
-   ```  
-   First argument: function version (`V1` or `V2`).  
-   Second argument: configuration object (its structure depends on the version).  
-   👉 See [HTTPS](#https) section for more details.
+- **@FirebaseHttps**  
+  Decorator to mark NestJS modules for deployment as Firebase Functions.  
+  Usage:
+
+  ```ts
+  @FirebaseHttps(EnumFirebaseFunctionVersion.V1, { memory: '256MB' })
+  ```
+
+  First argument: function version (`V1` or `V2`).  
+  Second argument: configuration object (its structure depends on the version).  
+  👉 See [HTTPS](#https) section for more details.
 
 - **FirebaseModule**  
   NestJS global module that provides the `Firebase` injectable. It automatically initializes Firebase using credentials from `.env`. Import it to use Firebase services (Auth, Firestore, Storage).
@@ -340,13 +339,15 @@ Finally, export your trigger in `index.ts` to enable deployment.
 - **Firebase**  
   Injectable service wrapping Firebase Admin SDK.  
   Provides:
+
   - `firestore(databaseId?: string)` – Access Firestore (default or specific DB).
   - `auth(tenantId?: string)` – Access Auth service (supports multi-tenancy).
   - `storage()` – Access Cloud Storage.
   - `app()` – Access the initialized Firebase App.
 
 - **EnumFirebaseFunctionVersion**  
-  Enum to choose between Firebase Functions v1 or v2. Used in the `@FirebaseHttps` decorator.  
+  Enum to choose between Firebase Functions v1 or v2. Used in the `@FirebaseHttps` decorator.
+
   ```ts
   export enum EnumFirebaseFunctionVersion {
     V1 = 'V1',
@@ -371,7 +372,6 @@ Finally, export your trigger in `index.ts` to enable deployment.
   const mod = await getModule(SomeModule);
   const service = mod.get(SomeService);
   ```
-  
 
 <br>
 
