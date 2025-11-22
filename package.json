@@ -17,7 +17,6 @@
     "build": "tsc",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node ./src/scripts/generate-firebase-deployment.js && node ./src/scripts/check-and-install-firebase.js",
     "pack": "npm pack"
   },
   "keywords": [
