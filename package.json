@@ -6,9 +6,13 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
+    "bin",
     "src/scripts/generate-firebase-deployment.js",
     "src/scripts/check-and-install-firebase.js"
   ],
+  "bin": {
+    "nestfire": "bin/nestfire.js"
+  },
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
