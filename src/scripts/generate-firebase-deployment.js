@@ -16,20 +16,16 @@ const content = `/**
  *
  */
 
-
 import { AppModule } from 'src/app.module';
 import { firebaseFunctionsHttpsDeployment } from 'nestfire';
+// Import additional triggers here
 
 const httpsFunctions: Record<string, any> = firebaseFunctionsHttpsDeployment(AppModule);
-const exportedFunctions = {
+
+module.exports = {
   ...httpsFunctions,
   // Add other exported functions here if needed (E.g., Firestore triggers, etc.)
 };
-
-export default exportedFunctions;
-export { exportedFunctions };
-module.exports = exportedFunctions;
-
 `;
 
 fs.writeFileSync(outPath, content, 'utf8');
