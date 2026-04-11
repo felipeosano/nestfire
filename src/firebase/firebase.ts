@@ -47,7 +47,8 @@ export class Firebase {
    * Get Realtime Database instance
    * @returns {Database} - Realtime Database instance
    * @memberof Firebase
-   * @description Requires FIREBASE_DATABASE_URL environment variable to be set.
+   * @description The databaseURL is auto-detected from the service account's project_id.
+   * Can be overridden via FIREBASE_DATABASE_URL environment variable.
    */
   public database(): Database {
     if (!this._database) {
@@ -124,6 +125,10 @@ export class Firebase {
       firebaseConfig.credential = credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT_KEY));
     } else {
       firebaseConfig.credential = credential.cert(require(path.resolve(process.env.SERVICE_ACCOUNT_KEY_PATH)));
+    }
+
+    if (process.env.FIREBASE_DATABASE_URL) {
+      firebaseConfig.databaseURL = process.env.FIREBASE_DATABASE_URL;
     }
 
     return firebaseConfig;
