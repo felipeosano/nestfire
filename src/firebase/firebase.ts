@@ -3,6 +3,7 @@ import { Auth, getAuth, TenantAwareAuth } from 'firebase-admin/auth';
 import { getApps, initializeApp, App, AppOptions } from 'firebase-admin/app';
 import { Injectable } from '@nestjs/common';
 import { getStorage, Storage } from 'firebase-admin/storage';
+import { Database, getDatabase } from 'firebase-admin/database';
 import { credential } from 'firebase-admin';
 import * as path from 'path';
 
@@ -11,6 +12,7 @@ export class Firebase {
   private _firestore: Firestore;
   private _auth: Auth;
   private _storage: Storage;
+  private _database: Database;
   private _app: App;
 
   constructor() {
@@ -39,6 +41,19 @@ export class Firebase {
 
   public storage(): Storage {
     return this._storage;
+  }
+
+  /**
+   * Get Realtime Database instance
+   * @returns {Database} - Realtime Database instance
+   * @memberof Firebase
+   * @description Requires FIREBASE_DATABASE_URL environment variable to be set.
+   */
+  public database(): Database {
+    if (!this._database) {
+      this._database = getDatabase(this._app);
+    }
+    return this._database;
   }
 
   public app(): App {
