@@ -127,8 +127,8 @@ export class Firebase {
       firebaseConfig.credential = credential.cert(require(path.resolve(process.env.SERVICE_ACCOUNT_KEY_PATH)));
     }
 
-    if (process.env.FIREBASE_DATABASE_URL) {
-      firebaseConfig.databaseURL = process.env.FIREBASE_DATABASE_URL;
+    if (process.env.DATABASE_URL) {
+      firebaseConfig.databaseURL = process.env.DATABASE_URL;
     }
 
     return firebaseConfig;
